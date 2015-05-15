@@ -1,0 +1,149 @@
+.TH CHKDF 8l "1 October r
+.SH NAME
+.B chkdf
+- uses  
+.B df
+on a remote host to check that the local file system percentage usage is within
+specified limits.
+.SH SYNOPSIS
+\fBchkdf [-c \fI<config file>\fB [-d] [-e \fI<e-mail_address>\fB]
+[-u \fI<login name>\fB] [-l] [-m \fI<max_usage>\fB] [-v] <hostname>\fR
+.SH AVAILABILITY
+.B chkdf
+is a Bourne shell script which should work equally well on all versions of UNIX
+and Linux.
+.SH DESCRIPTION
+The script
+.BR chkdf ,
+invokes a
+.B ssh
+session to the remote host specified on the command line and runs the
+.B df
+command. The output which is piped  back to the the administration host is used
+by 
+.B awk
+to extract the percentage usage of the filesystems and compares this to
+the maximum usage value set in the configuration file.
+.LP
+In the event of no host name being set on the command line the target host
+is set to "localhost".
+.LP
+If the threshold is exceeded email is dispatched to the mail address specified
+on the command line (see 
+.B -m
+option below).
+.LP
+If the configuration file exists but the \fIhost\fR is not found a default
+value of 60% is used as the threshold for all file systems found.
+.LP
+If the \fIhost\fR is found in the configuration file but the file system
+being checked is not, the \fIdefault\fR is used. This may be the global
+\fIdefault\fR of 60% or a \fIhost\fR specific value set 
+in the \fIconfig\fR file.
+.LP
+The script is most useful when invoked by
+.B cron
+on a regular schedule throughout the day. 
+.SH OPTIONS
+.TP 5
+\fB-c \fI<config file>\fR
+The default configuration file is \fI/usr/local/etc/chkdf.cf\fR. An alternative
+configuration file may be set with the \fB-c\fR option. If no configuration
+file is found a message is written to standard error and the script terminates.
+.TP 5
+\fB-d\fR
+Set the script to debug mode.
+.IP
+The \fB-x\fR option is set in the 
+shell, output of the usage and maximum value comparator 
+for each file system is turned on and the contents of the temporary files
+generated are written to standard out.
+.TP 5
+\fB-e \fI<e-mail_recipient>\fR
+Alerts will be sent to the mail address specified at
+.IR e-mail_recipient .
+If the 
+.B -e
+option is not used
+.B chkdf
+will attempt to send the email alert to the user invoking the command.
+.TP
+\fB-l\fR
+Use the \fBsyslog\fR logging facility to record the invocation of 
+.B chkdf 
+and again should the threshold (see below) be exceeded. This degree of
+logging for most purposes would be over the top but it does allow 
+activity reports to be generated very easily.
+.TP
+\fB-m \fI<maximum>\fR
+Set the threshold or maximum percentage usage for any file
+system on the remote host to 
+.IR <maximum> .
+This override all settings in the configuration file. It is useful for
+getting the current state of play on a new host. A value of zero (0) will
+cause \fBchkdf\fR to report all file systems found.
+.TP 5
+\fB-u \fI<login_name>\fR
+The 
+.B ssh 
+session will attempt to login with 
+.IR login_name .
+.br
+If no 
+.I login_name
+is set on the command line
+.B chkdf
+will attempt to 
+.B login
+with the the current effective user id.
+.TP
+.B -v
+Set the operation mode of the script to 
+.IR verbose .
+In
+.I verbose mode
+.B chkdf
+will report it's progress as it runs and will write any alerts to 
+\fIstandard out\fR. 
+
+.SH EXAMPLES
+.nf
+.ft CW
+chkdf merlin
+.fi
+.ft R
+.LP
+Check the file system usage on merlin using the configuration file
+\fI/usr/local/etc/chkdf.cf\fR.
+.LP
+Email the user invoking the command if any of the filesystems exceed the
+usage thresholds set in the configuration file. If a filesystem is not found
+in the configuration file use the default threshold. If no default is found
+in the configuration file set a maximum value of 60%.
+.nf
+.ft CW
+chkdf -m 65 -e systems.admin@citylinux.com caswallon-gw 
+.fi
+.ft R
+.LP
+Check the file system usage on "caswallon-gw". Override any thresholds
+found in the configuration files. If any of the file
+systems exceed 65% send an email alert to the systems administrator
+at City Linux.
+.SH FILES
+.IR /usr/local/etc/chkdf.cf .
+.SH BUGS
+The script has very little input error checking. Name resolution and
+network availability is not checked. The script is designed to be used
+with frequently used host names where
+.B ssh 
+keys have already been exchanged.
+.SH SEE ALSO
+.IR chkftpd ,
+.IR chkfw ,
+.IR clean .
+.SH AUTHOR
+Clifford W Fulford of City Linux.
+.br
+Offering systems management and support for
+Linux, Windows and Apple environments. Contact fulford@fulford.net or +44 (0)709 229 5385.

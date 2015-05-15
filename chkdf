@@ -1,0 +1,92 @@
+#$Id: chkdf,v 1.41 2014/04/29 08:24:50 fulford Exp $
+#$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
+#$Author: fulford $
+#$Revision: 1.41 $
+#
+# Copyright (c) 2012-2013 Clifford W Fulford.
+# Licensed for public use under the LGPL.
+# For assistance  call 0709 229 5385
+#		e-mail fulford@fulford.net
+########################################################################
+cmd=`basename $0`
+syntax="$0 [-c <config file> [-e <email_rcpt>] [-l] [-m #(max % used)] [-u <login] [-v] [host]"
+while [ $# -gt 0 ];do
+	case $1 in
+		-c) config=$2;shift 2;;
+		-d) debug=:;adebug="-v debug=1";set -x;shift;;
+		-e) rcpt=$2;shift 2;;
+		-u) login=$2;shift 2;;
+		-l) log=:;shift;;
+		-m) max=$2;shift 2 ;;
+		-v) verbose=:;shift ;;
+		-[^cvmru]) echo $syntax >&2 ; exit;;
+		 *) host=$1;shift;;
+	esac
+done
+config=${config:="/usr/local/etc/chkdf.cf"}
+default=60
+host=${host:=localhost}
+rcpt=${rcpt:=`id -un`}
+log=${log:-false}
+login=${login:=`id -nu`}
+logger="/usr/bin/logger"
+max=${max:-0}
+msg=/tmp/${cmd}msg$$
+tmp=/tmp/$cmd${host}$$
+hdf=/tmp/$cmd${host}hdf$$
+verbose=${verbose:-""}
+
+[ $log ] && { $logger -t $cmd "$host run" ;}
+if [ -f $config ];then
+	if ! grep $host $config >/dev/null;then
+		echo "$cmd: no configuration for $host, using defaults.">&2
+	fi
+	sed -ne '/^'$host':/,/^$/{
+		/^[ \t].*:.*/{
+			s/\t//
+			s/:/ /
+			p
+		}
+	}' $config >$tmp
+	[ $max -gt 0  ] && echo "max $max" >>$tmp
+	grep default $tmp >/dev/null||{
+		echo "default $default">>$tmp
+	}
+else
+	echo "$cmd: config $config not found" >&2
+	exit 1
+fi
+[ $verbose ]&& echo "`basename $0` contacting $host" >&2
+ssh -l $login $host "df -lPk" >$hdf 
+awk $adebug '{
+	if(NR == FNR) { a[$1]=$2 
+	}
+	if(NR > FNR){
+		if($1 !~ /Filesystem/){
+			sub("%","",$5);
+			if("max" in a){
+				max=a["max"]
+			}else{
+				if($6 in a) max=a[$6]
+				else max=a["default"]
+			}
+			if ($5 > max){
+				print "Warning " $6 " " $5 "% full" 
+			}
+			if(debug >= 1) print $6 " " $5 "% max=" max
+		}
+	}
+}' $tmp $hdf |
+while read line;do
+	if [ "$line" ];then
+		set $line
+		[ $verbose ] && echo "$line on $host!">&2
+		logger -t $cmd "$line on ${host}!"
+		echo "$line on $host" >>$msg
+	fi
+done
+if  [ -f $msg ];then 
+	 mailx -s "$cmd $host warning! `date`" ${cc:+"-c $cc"} $rcpt <$msg
+fi
+[ "$debug" ] && { cat $tmp $hdf;read ought ;}
+rm $tmp $hdf
