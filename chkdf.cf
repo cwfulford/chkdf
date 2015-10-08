@@ -1,7 +1,7 @@
 <pre>
 
-# $Id: chkdf.cf,v 1.19 2015/10/08 12:44:28 fulford Exp $
-# $Revision: 1.19 $
+# $Id: chkdf.cf,v 1.20 2015/10/08 12:56:07 fulford Exp $
+# $Revision: 1.20 $
 # Author C W Fulford.
 # Copyright 2013-2014 (c) C W Fulford. All rights reserved.
 # For assistance contact fulford@fulford.net 0709 229 5385
@@ -17,7 +17,7 @@
 caswallon-gw:
 	/:90
 	/var:15
-	/u:1
+	/u:10
 	/usr:10
 	/dev/sh:3
 	default:60
