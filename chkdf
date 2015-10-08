@@ -1,7 +1,7 @@
-#$Id: chkdf,v 1.45 2015/10/08 12:48:38 fulford Exp fulford $
+#$Id: chkdf,v 1.46 2015/10/08 12:49:48 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.45 $
+#$Revision: 1.46 $
 #
 # Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
@@ -70,7 +70,7 @@ awk $adebug -v host=$host -v cmd=$cmd '{
 				else max=a["default"]
 			}
 			if(debug >= 1) print "max for " $6 "=" max " $5=" $5
-			if (0$5 >= 0max){
+			if (0$5 > 0max){
 				printf "Warning! %6s %3d%% on %s\n",$6,$5,host
 			}
 		}
