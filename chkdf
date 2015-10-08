@@ -1,7 +1,7 @@
-#$Id: chkdf,v 1.48 2015/10/08 13:44:19 fulford Exp fulford $
+#$Id: chkdf,v 1.49 2015/10/08 14:06:23 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.48 $
+#$Revision: 1.49 $
 #
 # Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
@@ -55,7 +55,7 @@ else
 	exit 1
 fi
 rcpt=${rcpt:=`id -nu`}
-[ $verbose ] && echo "`basename $0` contacting $host" >&2
+[ $verbose ] && echo "`basename $0`: contacting $host" >&2
 ssh -l $login $host "df -lPk" >$hdf 
 awk $adebug -v host=$host -v cmd=$cmd '{
 	if(NR == FNR) { a[$1]=$2 
@@ -78,10 +78,16 @@ awk $adebug -v host=$host -v cmd=$cmd '{
 	}
 }' $tmp $hdf |
 while read line;do
-		[ $verbose ] && echo "$cmd: $line">&2
-		[ $log ] && logger -t $cmd "$line"
-		[ -n $rcpt ] && echo "$line" >>$msg
+	echo "$line" >>$msg
+	[ $log ] && logger -t $cmd "$line"
+	[ $verbose ] && echo "$cmd: $line"
 done
+[ $verbose ] &&{
+	if [ ! -f $msg ];then
+		echo "$cmd: $host ok"
+	fi
+}
+	
 if  [ -f $msg ];then 
 	 mailx -s "$cmd $host warning! `date`" ${cc:+"-c $cc"} $rcpt <$msg
 fi
