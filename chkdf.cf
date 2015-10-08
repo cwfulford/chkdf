@@ -1,7 +1,7 @@
 <pre>
 
-# $Id: chkdf.cf,v 1.16 2015/03/04 11:29:07 fulford Exp $
-# $Revision: 1.16 $
+# $Id: chkdf.cf,v 1.18 2015/10/08 11:12:40 fulford Exp $
+# $Revision: 1.18 $
 # Author C W Fulford.
 # Copyright 2013-2014 (c) C W Fulford. All rights reserved.
 # For assistance contact fulford@fulford.net 0709 229 5385
@@ -15,8 +15,8 @@
 # a blank line. Lines preceded with a hash (#) are ignored. 
  
 caswallon-gw:
-	/:89
-	/var:80
+	/:90
+	/var:15
 	/u:10
 	/usr:10
 	/dev/sh:3
@@ -25,7 +25,7 @@ caswallon-gw:
 dougal:
 	/:30
 	/usr:80
-	/var:75
+	/var:77
 	/home:25
 	/tmp:5
 	default:60	

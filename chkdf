@@ -1,9 +1,9 @@
-#$Id: chkdf,v 1.41 2014/04/29 08:24:50 fulford Exp $
+#$Id: chkdf,v 1.42 2015/10/08 11:23:12 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.41 $
+#$Revision: 1.42 $
 #
-# Copyright (c) 2012-2013 Clifford W Fulford.
+# Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
 # For assistance  call 0709 229 5385
 #		e-mail fulford@fulford.net
@@ -26,7 +26,6 @@ done
 config=${config:="/usr/local/etc/chkdf.cf"}
 default=60
 host=${host:=localhost}
-rcpt=${rcpt:=`id -un`}
 log=${log:-false}
 login=${login:=`id -nu`}
 logger="/usr/bin/logger"
@@ -56,9 +55,9 @@ else
 	echo "$cmd: config $config not found" >&2
 	exit 1
 fi
-[ $verbose ]&& echo "`basename $0` contacting $host" >&2
+[ $verbose ] && echo "`basename $0` contacting $host" >&2
 ssh -l $login $host "df -lPk" >$hdf 
-awk $adebug '{
+awk $adebug -v host=$host -v cmd=$cmd '{
 	if(NR == FNR) { a[$1]=$2 
 	}
 	if(NR > FNR){
@@ -71,19 +70,15 @@ awk $adebug '{
 				else max=a["default"]
 			}
 			if ($5 > max){
-				print "Warning " $6 " " $5 "% full" 
+				printf "Warning! %6s %3d%% on %s\n",$6,$5,host
 			}
-			if(debug >= 1) print $6 " " $5 "% max=" max
 		}
 	}
 }' $tmp $hdf |
 while read line;do
-	if [ "$line" ];then
-		set $line
-		[ $verbose ] && echo "$line on $host!">&2
-		logger -t $cmd "$line on ${host}!"
-		echo "$line on $host" >>$msg
-	fi
+		[ $verbose ] && echo "$cmd: $line">&2
+		[ $log ] && logger -t $cmd "$line"
+		[ -n $rcpt ] && echo "$line" >>$msg
 done
 if  [ -f $msg ];then 
 	 mailx -s "$cmd $host warning! `date`" ${cc:+"-c $cc"} $rcpt <$msg
