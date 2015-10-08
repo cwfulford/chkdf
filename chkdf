@@ -1,7 +1,7 @@
-#$Id: chkdf,v 1.43 2015/10/08 11:41:18 fulford Exp fulford $
+#$Id: chkdf,v 1.44 2015/10/08 12:42:10 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.43 $
+#$Revision: 1.44 $
 #
 # Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
@@ -26,7 +26,6 @@ done
 config=${config:="/usr/local/etc/chkdf.cf"}
 default=60
 host=${host:=localhost}
-log=${log:-false}
 login=${login:=`id -nu`}
 logger="/usr/bin/logger"
 max=${max:-0}
@@ -38,7 +37,7 @@ verbose=${verbose:-""}
 [ $log ] && { $logger -t $cmd "$host run" ;}
 if [ -f $config ];then
 	if ! grep $host $config >/dev/null;then
-		echo "$cmd: no configuration for $host, using defaults.">&2
+		echo "$cmd: no configuration for $host, using defaults." >&2
 	fi
 	sed -ne '/^'$host':/,/^$/{
 		/^[ \t].*:.*/{
@@ -70,7 +69,8 @@ awk $adebug -v host=$host -v cmd=$cmd '{
 				if($6 in a) max=a[$6]
 				else max=a["default"]
 			}
-			if ($5 > max){
+			if(debug >= 1) print "max for " $6 "=" max " $5=" $5
+			if (0$5 >= max){
 				printf "Warning! %6s %3d%% on %s\n",$6,$5,host
 			}
 		}
@@ -84,5 +84,5 @@ done
 if  [ -f $msg ];then 
 	 mailx -s "$cmd $host warning! `date`" ${cc:+"-c $cc"} $rcpt <$msg
 fi
-[ "$debug" ] && { cat $tmp $hdf;read ought ;}
+[ "$debug" ] && { cat $tmp $hdf ;}
 rm $tmp $hdf
