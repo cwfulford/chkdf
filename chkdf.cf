@@ -1,7 +1,7 @@
 <pre>
 
-# $Id: chkdf.cf,v 1.23 2015/10/08 14:06:14 fulford Exp $
-# $Revision: 1.23 $
+# $Id: chkdf.cf,v 1.30 2015/11/30 12:13:28 fulford Exp $
+# $Revision: 1.30 $
 # Author C W Fulford.
 # Copyright 2013-2014 (c) C W Fulford. All rights reserved.
 # For assistance contact fulford@fulford.net 0709 229 5385
@@ -24,11 +24,11 @@ caswallon-gw:
 
 dougal:
 	/:30
-	/usr:80
-	/var:77
+	/usr:90
+	/var:90
 	/home:25
 	/tmp:5
-	default:60	
+	default:90	
 
 architects:
 	/:0
