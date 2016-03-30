@@ -1,172 +1,236 @@
+<h2 id="heading1">NAME</h2>
+<p class="indent">
+<b><a href="./scripts.php?script=chkdf">chkdf</a></b>
+- uses  
+<b>df</b>
+on a remote host to check that the local file system percentage usage is within
+specified limits.
+</p>
+<h2 id="heading2">SYNOPSIS</h2>
+<p class="indent">
 
-<p style="margin-left:11%"><a href="#heading1">NAME</a><br/>
-<a href="#heading2">SYNOPSIS</a><br/>
-<a href="#heading3">AVAILABILITY</a><br/>
-<a href="#heading4">DESCRIPTION</a><br/>
-<a href="#heading5">OPTIONS</a><br/>
-<a href="#heading6">EXAMPLES</a><br/>
-<a href="#heading7">FILES</a><br/>
-<a href="#heading8">BUGS</a><br/>
-<a href="#heading9">SEE ALSO</a><br/>
-<a href="#heading10">AUTHOR</a><br/>
+<b><a href="./scripts.php?script=chkdf">chkdf</a> [-c </b>
+<i>&lt;config file&gt;</i>
+<b> [-d] [-e </b>
+<i>&lt;e-mail_address&gt;</i>
+<b>]</b>
+[-u 
+<i>&lt;login name&gt;</i>
+<b>] [-l] [-m </b>
+<i>&lt;max_usage&gt;</i>
+<b>] [-v] &lt;hostname&gt;</b>
 
 </p>
-<hr/>
+<h2 id="heading3">AVAILABILITY</h2>
+<p class="indent">
+<b><a href="./scripts.php?script=chkdf">chkdf</a></b>
+is a Bourne shell script which should work equally well on all versions of UNIX
+and Linux.
+</p>
+<h2 id="heading4">DESCRIPTION</h2>
+<p class="indent">
+The script
+<b><a href="./scripts.php?script=chkdf">chkdf</a>,</b>
+invokes a
+<b>ssh</b>
+session to the remote host specified on the command line and runs the
+<b>df</b>
+command. The output which is piped  back to the the administration host is used
+by 
+<b>awk</b>
+to extract the percentage usage of the filesystems and compares this to
+the maximum usage value set in the configuration file.
+</p>
+<p class="indent">
+In the event of no host name being set on the command line the target host
+is set to "localhost".
+</p>
+<p class="indent">
+If the threshold is exceeded email is dispatched to the mail address specified
+on the command line (see 
+<b>-m</b>
+option below).
+</p>
+<p class="indent">
+If the configuration file exists but the 
+<i>host</i>
+ is not found a default
+value of 60% is used as the threshold for all file systems found.
+</p>
+<p class="indent">
+If the 
+<i>host</i>
+ is found in the configuration file but the file system
+being checked is not, the 
+<i>default</i>
+ is used. This may be the global
 
+<i>default</i>
+ of 60% or a 
+<i>host</i>
+ specific value set 
+in the 
+<i>config</i>
+ file.
+</p>
+<p class="indent">
+The script is most useful when invoked by
+<b>cron</b>
+on a regular schedule throughout the day. 
+</p>
+<h2 id="heading5">OPTIONS</h2>
+<p class="indent">
+</p>
+<p class="indent">
 
-<h2 id="heading1">NAME
-</h2>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=chkdf">chkdf</a></b> -
-uses <b>df</b> on a remote host to check that the local file
-system percentage usage is within specified limits.</p>
-<h2 id="heading2">SYNOPSIS
-</h2>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em"><b>chkdf
-[-c</b> <i>&lt;config file&gt;</i> <b>[-d] [-e</b>
-<i>&lt;e-mail_address&gt;</i><b>] [-u</b> <i>&lt;login
-name&gt;</i><b>] [-l] [-m</b> <i>&lt;max_usage&gt;</i><b>]
-[-v] &lt;hostname&gt;</b>
-<h2 id="heading3">AVAILABILITY
-</h2>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=chkdf">chkdf</a></b> is
-a Bourne shell script which should work equally well on all
-versions of UNIX and Linux.</p>
-<h2 id="heading4">DESCRIPTION
-</h2>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">The script
-<b><a href="./scripts.php?script=chkdf">chkdf</a></b>, invokes a <b>ssh</b> session to the remote
-host specified on the command line and runs the <b>df</b>
-command. The output which is piped back to the the
-administration host is used by <b>awk</b> to extract the
-percentage usage of the filesystems and compares this to the
-maximum usage value set in the configuration file.</p>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">In the event of
-no host name being set on the command line the target host
-is set to &quot;localhost&quot;.</p>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">If the
-threshold is exceeded email is dispatched to the mail
-address specified on the command line (see <b>-m</b> option
-below).</p>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">If the
-configuration file exists but the <i>host</i> is not found a
-default value of 60% is used as the threshold for all file
-systems found.</p>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">If the
-<i>host</i> is found in the configuration file but the file
-system being checked is not, the <i>default</i> is used.
-This may be the global <i>default</i> of 60% or a
-<i>host</i> specific value set in the <i>config</i>
-file.</p>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">The script is
-most useful when invoked by <b>cron</b> on a regular
-schedule throughout the day.</p>
-<h2 id="heading5">OPTIONS
-</h2>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em"><b>-c</b>
+<b>-c </b>
 <i>&lt;config file&gt;</i>
-<p style="margin-left:11%;margin-left:18%;">The default configuration file
-is <i>/usr/local/etc/chkdf.cf</i>. An alternative
-configuration file may be set with the <b>-c</b> option. If
-no configuration file is found a message is written to
-standard error and the script terminates.</p>
-       
-<p style="margin-left:11%"><b>-d</b>
-<p style="margin-left:11%">Set the script to debug mode.</p>
-<p style="margin-left:11%;margin-left:18%; margin-top: 1em">The <b>-x</b>
-option is set in the shell, output of the usage and maximum
-value comparator for each file system is turned on and the
-contents of the temporary files generated are written to
-standard out.</p>
-<p style="margin-left:11%;margin-left:11%;"><b>-e</b>
+
+The default configuration file is 
+<i>/usr/local/etc/<a href="./scripts.php?script=chkdf.cf">chkdf.cf</a></i>
+. An alternative
+configuration file may be set with the 
+<b>-c</b>&nbsp;&nbsp;&nbsp;
+ option. If no configuration
+file is found a message is written to standard error and the script terminates.
+</p>
+<p class="indent">
+
+<b>-d</b>&nbsp;&nbsp;&nbsp;
+
+Set the script to debug mode.
+
+The 
+<b>-x</b>&nbsp;&nbsp;&nbsp;
+ option is set in the 
+shell, output of the usage and maximum value comparator 
+for each file system is turned on and the contents of the temporary files
+generated are written to standard out.
+</p>
+<p class="indent">
+
+<b>-e </b>
 <i>&lt;e-mail_recipient&gt;</i>
-<p style="margin-left:11%;margin-left:18%;">Alerts will be sent to the mail
-address specified at <i>e-mail_recipient</i>. If the
-<b>-e</b> option is not used <b><a href="./scripts.php?script=chkdf">chkdf</a></b> will attempt to
-send the email alert to the user invoking the command.</p>
-       
-<p style="margin-left:11%"><b>-l</b>
-<p style="margin-left:11%">Use the <b>syslog</b> logging facility to record the
-invocation of <b><a href="./scripts.php?script=chkdf">chkdf</a></b> and again should the threshold
-(see below) be exceeded. This degree of logging for most
-purposes would be over the top but it does allow activity
-reports to be generated very easily.</p>
-<p style="margin-left:11%;margin-left:11%;"><b>-m</b>
+
+Alerts will be sent to the mail address specified at
+<i>e-mail_recipient</i>.
+If the 
+<b>-e</b>&nbsp;&nbsp;&nbsp;
+option is not used
+<b><a href="./scripts.php?script=chkdf">chkdf</a></b>
+will attempt to send the email alert to the user invoking the command.
+</p>
+<p class="indent">
+
+<b>-l</b>&nbsp;&nbsp;&nbsp;
+
+Use the 
+<b>syslog</b>
+ logging facility to record the invocation of 
+<b><a href="./scripts.php?script=chkdf">chkdf</a> </b>
+and again should the threshold (see below) be exceeded. This degree of
+logging for most purposes would be over the top but it does allow 
+activity reports to be generated very easily.
+</p>
+<p class="indent">
+
+<b>-m </b>
 <i>&lt;maximum&gt;</i>
-<p style="margin-left:11%;margin-left:18%;">Set the threshold or maximum
-percentage usage for any file system on the remote host to
-<i>&lt;maximum&gt;</i>. This override all settings in the
-configuration file. It is useful for getting the current
-state of play on a new host. A value of zero (0) will cause
-<b><a href="./scripts.php?script=chkdf">chkdf</a></b> to report all file systems found.</p>
-<p style="margin-left:11%;margin-left:11%;"><b>-u</b>
+
+Set the threshold or maximum percentage usage for any file
+system on the remote host to 
+<i>&lt;maximum&gt;</i>.
+This override all settings in the configuration file. It is useful for
+getting the current state of play on a new host. A value of zero (0) will
+cause 
+<b><a href="./scripts.php?script=chkdf">chkdf</a></b>
+ to report all file systems found.
+</p>
+<p class="indent">
+
+<b>-u </b>
 <i>&lt;login_name&gt;</i>
-<p style="margin-left:11%;margin-left:18%;">The <b>ssh</b> session will
-attempt to login with <i>login_name</i>. <br/>
-If no <i>login_name</i> is set on the command line
-<b><a href="./scripts.php?script=chkdf">chkdf</a></b> will attempt to <b>login</b> with the the
-current effective user id.</p>
-       
-<p style="margin-left:11%"><b>-v</b>
-<p style="margin-left:11%">Set the operation mode of the script to <i>verbose</i>.
-In <i>verbose mode</i> <b><a href="./scripts.php?script=chkdf">chkdf</a></b> will report it&rsquo;s
-progress as it runs and will write any alerts to <i>standard
-out</i>.</p> 
-<h2 id="heading6">EXAMPLES
-</h2>
-<pre style="margin-left:11%; margin-top: 1em"><a href="./scripts.php?script=chkdf">chkdf</a> merlin</pre>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">Check the file
-system usage on merlin using the configuration file
-<i>/usr/local/etc/chkdf.cf</i>.</p>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">Email the user
-invoking the command if any of the filesystems exceed the
-usage thresholds set in the configuration file. If a
-filesystem is not found in the configuration file use the
-default threshold. If no default is found in the
-configuration file set a maximum value of 60%.</p>
-<pre style="margin-left:11%;"><a href="./scripts.php?script=chkdf">chkdf</a> -m 65 -e systems.admin@citylinux.com caswallon-gw</pre>
-<p style="margin-left:11%;margin-left:11%; margin-top: 1em">Check the file
-system usage on &quot;caswallon-gw&quot;. Override any
-thresholds found in the configuration files. If any of the
-file systems exceed 65% send an email alert to the systems
-administrator at <a href="http://www.citylinux.com"
-title="Go to the City Linux homepage">
-City Linux
-</a>.</p>
-<h2 id="heading7">FILES
-</h2>
 
+The 
+<b>ssh </b>
+session will attempt to login with 
+<i>login_name</i>.
+<br/>
+If no 
+<i>login_name</i>
+is set on the command line
+<b><a href="./scripts.php?script=chkdf">chkdf</a></b>
+will attempt to 
+<b>login</b>
+with the the current effective user id.
+</p>
+<p class="indent">
+<b>-v</b>&nbsp;&nbsp;&nbsp;
+Set the operation mode of the script to 
+<i>verbose</i>.
+In
+<i>verbose mode</i>
+<b><a href="./scripts.php?script=chkdf">chkdf</a></b>
+will report it's progress as it runs and will write any alerts to 
 
+<i>standard out</i>
+. 
 
-<p style="margin-left:11%; margin-top: 1em"><i>/usr/local/etc/<a href="./scripts.php?script=chkdf.cf">chkdf.cf</a></i>.</p>
+</p>
+<h2 id="heading6">EXAMPLES</h2>
+<p class="indent">
+</p><div class="cmdline">
+<pre>
+chkdf merlin
+</pre></div>
+<p class="indent">
+</p>
+<p class="indent">
+Check the file system usage on merlin using the configuration file
 
-<h2 id="heading8">BUGS
-</h2>
-
-
-<p style="margin-left:11%; margin-top: 1em">The script has
-very little input error checking. Name resolution and
-network availability is not checked. The script is designed
-to be used with frequently used host names where <b>ssh</b>
-keys have already been exchanged.</p>
-
-<h2 id="heading9">SEE ALSO
-</h2>
-
-
-
-<p style="margin-left:11%; margin-top: 1em"><a href="./scripts.php?script=chkftpd&amp;man=y">chkftpd</a>,
-<a href="./scripts.php?script=chkfw&amp;man=y">chkfw</a>, <a href="./scripts.php?script=clean&amp;man=y">clean</a>.</p>
-
-<h2 id="heading10">AUTHOR
-</h2>
-
-
-<p style="margin-left:11%; margin-top: 1em">Clifford W
-Fulford of <a href="http://www.citylinux.com"
-title="Go to the City Linux homepage">
-City Linux
-</a>. <br/>
-Offering systems management and support for Linux, Windows
-and Apple environments. Contact <a href="mailto:fulford@fulford.net" title="Send mail to Clifford W Fulford">fulford@fulford.net</a> or +44
-(0)709 229 5385.</p>
-<hr/>
+<i>/usr/local/etc/<a href="./scripts.php?script=chkdf.cf">chkdf.cf</a></i>
+.
+</p>
+<p class="indent">
+Email the user invoking the command if any of the filesystems exceed the
+usage thresholds set in the configuration file. If a filesystem is not found
+in the configuration file use the default threshold. If no default is found
+in the configuration file set a maximum value of 60%.
+</p><div class="cmdline">
+<pre>
+chkdf -m 65 -e systems.admin@citylinux.com caswallon-gw 
+</pre></div>
+<p class="indent">
+</p>
+<p class="indent">
+Check the file system usage on "caswallon-gw". Override any thresholds
+found in the configuration files. If any of the file
+systems exceed 65% send an email alert to the systems administrator
+at City Linux.
+</p>
+<h2 id="heading7">FILES</h2>
+<p class="indent">
+<i>/usr/local/etc/<a href="./scripts.php?script=chkdf.cf">chkdf.cf</a></i>.
+</p>
+<h2 id="heading8">BUGS</h2>
+<p class="indent">
+The script has very little input error checking. Name resolution and
+network availability is not checked. The script is designed to be used
+with frequently used host names where
+<b>ssh </b>
+keys have already been exchanged.
+</p>
+<h2 id="heading9">SEE ALSO</h2>
+<p class="indent">
+<a href="./scripts.php?script=chkftpd&amp;man=y"><i>chkftpd</i>,</a>
+<a href="./scripts.php?script=chkfw&amp;man=y"><i>chkfw</i>,</a>
+<a href="./scripts.php?script=clean&amp;man=y"><i>clean</i>.</a>
+</p>
+<h2 id="heading10">AUTHOR</h2>
+<p class="indent">
+Clifford W Fulford of City Linux.
+<br/>
+Offering systems management and support for
+Linux, Windows and Apple environments. Contact fulford@fulford.net or +44 (0)709 229 5385.
+</p>
+	
