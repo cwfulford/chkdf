@@ -1,7 +1,7 @@
-#$Id: chkdf,v 1.49 2015/10/08 14:06:23 fulford Exp $
+#$Id: chkdf,v 1.50 2016/04/05 20:31:38 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.49 $
+#$Revision: 1.50 $
 #
 # Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
@@ -9,7 +9,7 @@
 #		e-mail fulford@fulford.net
 ########################################################################
 cmd=`basename $0`
-syntax="$0 [-c <config file> [-e <email_rcpt>] [-l] [-m #(max % used)] [-u <login] [-v] [host]"
+syntax="$0 [-c <config file> [-e <email_rcpt>] [-l] [-m #(max % used)] [-u <login] [-v] [-x <dir,dir,...>] [host]"
 while [ $# -gt 0 ];do
 	case $1 in
 		-c) config=$2;shift 2;;
@@ -19,6 +19,7 @@ while [ $# -gt 0 ];do
 		-l) log=:;shift;;
 		-m) max=$2;shift 2 ;;
 		-v) verbose=:;shift ;;
+		-x) xclude=$2;shift 2;;
 		-[^cvmru]) echo $syntax >&2 ; exit;;
 		 *) host=$1;shift;;
 	esac
@@ -33,6 +34,7 @@ msg=/tmp/${cmd}msg$$
 tmp=/tmp/$cmd${host}$$
 hdf=/tmp/$cmd${host}hdf$$
 verbose=${verbose:-""}
+xclude=`echo $xclude|sed -e 's/,/|/g'`
 
 [ $log ] && { $logger -t $cmd "$host run" ;}
 if [ -f $config ];then
@@ -56,7 +58,7 @@ else
 fi
 rcpt=${rcpt:=`id -nu`}
 [ $verbose ] && echo "`basename $0`: contacting $host" >&2
-ssh -l $login $host "df -lPk" >$hdf 
+ssh -l $login $host "df -lPk" |sed -e '/'$xclude'/d' >$hdf 
 awk $adebug -v host=$host -v cmd=$cmd '{
 	if(NR == FNR) { a[$1]=$2 
 	}
