@@ -1,7 +1,7 @@
-#$Id: chkdf,v 1.50 2016/04/05 20:31:38 fulford Exp $
+#$Id: chkdf,v 1.51 2016/04/05 20:32:56 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.50 $
+#$Revision: 1.51 $
 #
 # Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
@@ -34,7 +34,7 @@ msg=/tmp/${cmd}msg$$
 tmp=/tmp/$cmd${host}$$
 hdf=/tmp/$cmd${host}hdf$$
 verbose=${verbose:-""}
-xclude=`echo $xclude|sed -e 's/,/|/g'`
+xclude=`echo $xclude|sed -e 's/\,/|/g'`
 
 [ $log ] && { $logger -t $cmd "$host run" ;}
 if [ -f $config ];then
