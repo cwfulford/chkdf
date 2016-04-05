@@ -1,7 +1,7 @@
-#$Id: chkdf,v 1.54 2016/04/05 20:41:43 fulford Exp fulford $
+#$Id: chkdf,v 1.55 2016/04/05 20:42:47 fulford Exp fulford $
 #$Source: /src/merlin/usr/local/etc/RCS/chkdf,v $
 #$Author: fulford $
-#$Revision: 1.54 $
+#$Revision: 1.55 $
 #
 # Copyright (c) 2012-2015 Clifford W Fulford.
 # Licensed for public use under the LGPL.
@@ -35,7 +35,7 @@ tmp=/tmp/$cmd${host}$$
 hdf=/tmp/$cmd${host}hdf$$
 verbose=${verbose:-""}
 if [ $xclude ] ;then
-	 xclude=`echo $xclude|sed -e 's/\,/|/g;s/\//\\\//g'`
+	 xclude=`echo $xclude|sed -e 's/\,/\|/g;s/\//\\\//g'`
 	echo $xclude
 	exit
 else
