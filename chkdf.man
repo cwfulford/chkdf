@@ -41,6 +41,8 @@ being checked is not, the \fIdefault\fR is used. This may be the global
 \fIdefault\fR of 60% or a \fIhost\fR specific value set 
 in the \fIconfig\fR file.
 .LP
+The script attempts to exclude  cdroms, dvds and loopback devices.
+.LP
 The script is most useful when invoked by
 .B cron
 on a regular schedule throughout the day. 
