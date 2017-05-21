@@ -1,7 +1,7 @@
 <pre>
 
-# $Id: chkdf.cf,v 1.32 2016/04/06 14:49:16 fulford Exp fulford $
-# $Revision: 1.32 $
+# $Id: chkdf.cf,v 1.37 2017/05/21 09:10:14 fulford Exp fulford $
+# $Revision: 1.37 $
 # Author C W Fulford.
 # Copyright 2013-2014 (c) C W Fulford. All rights reserved.
 # For assistance contact fulford@fulford.net 0709 229 5385
@@ -13,8 +13,11 @@
 # followed by the threshold percentage take of used space.
 # Each stanza must be separated from the preceding one with
 # a blank line. Lines preceded with a hash (#) are ignored. 
+
+bfl:
+	default:90
  
-caswallon-gw:
+caswallon2:
 	/:90
 	/var:15
 	/u:10
@@ -40,10 +43,13 @@ architects:
 
 
 merlin:
-	/:40
+	/:73
+	/backup:50
+	/backup2:80
+	/u:65
 	/usr:60
 	/var:60
-	/u:80
+	/vm:95
 	/dev/shm:25
 	/default:60
 ######################################################################
