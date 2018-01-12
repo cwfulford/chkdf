@@ -1,7 +1,7 @@
 <pre>
 
-# $Id: chkdf.cf,v 1.37 2017/05/21 09:10:14 fulford Exp $
-# $Revision: 1.37 $
+# $Id: chkdf.cf,v 1.44 2017/08/24 20:19:13 fulford Exp $
+# $Revision: 1.44 $
 # Author C W Fulford.
 # Copyright 2013-2014 (c) C W Fulford. All rights reserved.
 # For assistance contact fulford@fulford.net 0709 229 5385
@@ -20,7 +20,7 @@ bfl:
 caswallon2:
 	/:90
 	/var:15
-	/u:10
+	/u:97
 	/usr:10
 	/dev/sh:10
 	default:60
@@ -46,12 +46,15 @@ merlin:
 	/:73
 	/backup:50
 	/backup2:80
-	/u:65
+	/u:80
 	/usr:60
 	/var:60
 	/vm:95
 	/dev/shm:25
 	/default:60
+	/media/usbhd-sdp1:100
+	/run:90
+	/mnt/sdha:100
 ######################################################################
 # This program is free software: you can redistribute it and or      #
 # modify it under the terms of the Lesser GNU General Public License #
